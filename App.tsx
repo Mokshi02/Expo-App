@@ -2,10 +2,15 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
-import React, { Component, useState } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Image, Button, FlatList } from 'react-native';
 import NewsPage from './src/tutorials/HttpClientComponent';
 import ListViewPage from './src/tutorials/ListComponent';
+import { Ionicons } from '@expo/vector-icons';
+import SignInScreen from './src/screens/SignInScreen';
+import RegisterScreen from './src/screens/RegisterScreen';
+import { initializeApp } from 'firebase/app';
+import { firebaseConfig } from './src/helper/Constants';
 
 // export default function App() {
 //   return (
@@ -24,7 +29,6 @@ function HomeScreen({navigation}){
       <Text style={styles.textStyle}>This is a Home Screen</Text>
       <Button title="Profile Page"
       onPress = {
-        //()=> navigation.navigate("Profile")
         ()=> navigation.navigate("Profile")
       }
       ></Button>
@@ -62,7 +66,7 @@ const Drawer = createDrawerNavigator();
 //   )
 // }
 
-export default function App(){
+function OldApp(){
   return(
     <NavigationContainer>
       <Drawer.Navigator initialRouteName="Home">
@@ -111,4 +115,46 @@ const styles = StyleSheet.create({
     color: "#f23"
   }
 });
+
+export default function App(){
+
+  const [showSplash, setShowSplash] = useState(true);
+
+  useEffect( ()=>{
+
+    // local function
+    async function showSplashScreen(){
+      try{
+        initializeApp(firebaseConfig);
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      }catch(error){
+        console.log("Something Went Wrong: "+error);
+      }finally{
+        setShowSplash(false);
+      }
+    }
+
+    showSplashScreen();
+    
+  }, [] );
+
+  if(showSplash){
+    return (
+      <View style={styles.splash}>
+          <Ionicons name="md-heart-circle-sharp" size={32} color="green"/>
+          <Text>Health Logger</Text>
+      </View>
+    );
+  }
+
+  return(
+      <NavigationContainer>
+      <Stack.Navigator initialRouteName="Signin">
+        <Stack.Screen name="Signin" component={SignInScreen} options={{title:"Sign In"}}/>
+        <Stack.Screen name="Register" component={RegisterScreen} options={{title:"Register"}}/>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+}
 
