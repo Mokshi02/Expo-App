@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, getFirestore, setDoc } from '@firebase/firestore';
 
 export default function RegisterScreen({navigation}) {
     const [name, setName] = useState('');
@@ -11,11 +12,17 @@ export default function RegisterScreen({navigation}) {
     function registerUser() {
         console.log("Data On Button Click: "+name+" "+email+" "+password);
         const auth = getAuth();
+        const db = getFirestore();
         createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             const user = userCredential.user;
             console.log("News User Created: "+user.uid);
-            // Firestore :)
+            const documentToInsert = {
+                name: name,
+                email: email,
+                uid: user.uid
+            };
+            setDoc(doc(db, "users", user.uid), documentToInsert);
         })
         .catch((error) => {
             const errorCode = error.code;
