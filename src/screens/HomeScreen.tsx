@@ -5,6 +5,7 @@ import { getFirestore } from "firebase/firestore"
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Appbar } from 'react-native-paper';
 
+
 function AppHomeScreen({navigation}){
 
     const Item = ( {itemData} ) => (
@@ -55,7 +56,7 @@ function AppHomeScreen({navigation}){
 
     return (
         <View>
-          {/* <Appbar>
+            {/* <Appbar>
               <Appbar.Action
                 icon="bell"
                 onPress={() => console.log('Pressed archive')}
@@ -68,11 +69,12 @@ function AppHomeScreen({navigation}){
                 />
               </Appbar> */}
 
-          { activityIndicator ? <ActivityIndicator/> : 
-            <FlatList data={restaurants} renderItem={renderItem}/>
-          }
+            { activityIndicator ? <ActivityIndicator/> : 
+             <FlatList data={restaurants} renderItem={renderItem}/>
+            }
         </View>
     );
+
 }
 
 const styles = StyleSheet.create({
@@ -108,7 +110,7 @@ const styles = StyleSheet.create({
     },
     subTitle:{
       fontSize: 12,
-      color: "##055"
+      color: "#055"
     }
   });
 
